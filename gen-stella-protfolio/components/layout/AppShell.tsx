@@ -13,7 +13,7 @@ const navItems = [
   { href: '/about', label: 'About' },
   { href: '/services', label: 'Services' },
   { href: '/portfolio', label: 'Portfolio' },
-  { href: '/team', label: 'Team' },
+  // { href: '/team', label: 'Team' },
   { href: '/subscriptions', label: 'Subscriptions' },
   { href: '/contact', label: 'Contact' },
 ]
@@ -49,7 +49,7 @@ export default function AppShell({ children }: AppShellProps) {
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
           <Link href="/" className="flex items-center gap-3 group">
             <div>
-              <img src="/logo/GenStellaIT.jpeg" alt="Gen Stella IT Logo" className="h-14 w-14 rounded-md" />
+              <img src="/logo/GenstellaIT.jpeg" alt="Gen Stella IT Logo" className="h-14 w-14 rounded-md" />
             </div>
             <div>
               <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-500 to-purple-400 dark:from-blue-500 dark:to-purple-400 text-transparent bg-clip-text tracking-wide group-hover:opacity-90 transition-opacity">

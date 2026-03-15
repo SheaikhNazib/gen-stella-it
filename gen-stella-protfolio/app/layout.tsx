@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   description: 'Professional software development and IT solutions | Gen Stella IT',
   generator: 'Gen Stella IT',
   icons: {
-    icon: '/logo/GenStellaIT.jpeg',
+    icon: '/logo/GenstellaIT.jpeg',
   },
 }
 

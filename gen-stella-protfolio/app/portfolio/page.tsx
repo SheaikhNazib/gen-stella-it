@@ -21,7 +21,7 @@ const projects = [
   {
     title: 'What To Cook',
     description: 'Recipe discovery platform that helps users find and organize recipes based on available ingredients and dietary preferences.',
-    image: '/portfolioImages/WhatToCook.jpeg',
+    image: '/portfolioImages/WhattoCook.jpeg',
     tags: ['Next.js', 'Recipes', 'Tailwind CSS'],
     link: 'https://whattocook-niloy.vercel.app/',
   },
