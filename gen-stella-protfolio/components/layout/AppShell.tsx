@@ -135,11 +135,11 @@ export default function AppShell({ children }: AppShellProps) {
                     About
                   </Link>
                 </li>
-                <li>
+                {/* <li>
                   <Link href="/team" className="hover:text-white transition-colors">
                     Team
                   </Link>
-                </li>
+                </li> */}
                 <li>
                   <Link href="/portfolio" className="hover:text-white transition-colors">
                     Portfolio
