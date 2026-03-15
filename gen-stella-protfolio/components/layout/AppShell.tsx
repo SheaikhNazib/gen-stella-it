@@ -20,14 +20,12 @@ const navItems = [
 
 export default function AppShell({ children }: AppShellProps) {
   const [isOpen, setIsOpen] = useState(false)
-  const [isDark, setIsDark] = useState(false)
+  const [isDark, setIsDark] = useState(true)
   const pathname = usePathname()
 
   useEffect(() => {
     const savedTheme = typeof window !== 'undefined' ? localStorage.getItem('theme') : null
-    if (savedTheme === 'dark') {
-      setIsDark(true)
-    }
+    setIsDark(savedTheme !== 'light')
   }, [])
 
   useEffect(() => {
@@ -194,7 +192,7 @@ export default function AppShell({ children }: AppShellProps) {
               <ul className="space-y-2">
                 <li>
                   <span className="block text-sm">Email</span>
-                  <span className="text-gray-300">hello@genstellait.com</span>
+                  <span className="text-gray-300">genstellait@gmail.com</span>
                 </li>
                 <li>
                   <span className="block text-sm">Location</span>
