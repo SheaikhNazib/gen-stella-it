@@ -54,13 +54,19 @@ function sizeClasses(size: SizeKey | number | undefined) {
   }
 }
 
+function isRasterImage(src?: string) {
+  return typeof src === 'string' && /\.(png|jpe?g|webp|avif|gif)(?:[?#].*)?$/i.test(src)
+}
+
 export default function ProfilePlaceholder({ name, src, size = 'md', className = '' }: Props) {
   const initials = getInitials(name)
   const { style, className: sizeClass } = sizeClasses(size)
   const bgIndex = name ? hashName(name) % BG_VARIANTS.length : Math.floor(Math.random() * BG_VARIANTS.length)
   const bgClass = BG_VARIANTS[bgIndex]
 
-  if (src) {
+  const showImage = isRasterImage(src)
+
+  if (showImage) {
     return (
       <img
         src={src}
