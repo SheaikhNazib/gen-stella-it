@@ -120,9 +120,9 @@ export default function AboutPage() {
                     <p className="text-sm text-gray-700 dark:text-slate-200 mt-1">Gen Stella IT · Studio</p>
                   </div>
                   <div className="flex -space-x-2">
-                    <ProfilePlaceholder name="Gen Stella IT" size="sm" className="w-8 h-8 border border-slate-900" />
-                    <ProfilePlaceholder size="sm" className="w-8 h-8 border border-slate-900" />
-                    <ProfilePlaceholder size="sm" className="w-8 h-8 border border-slate-900" />
+                    <ProfilePlaceholder name="Gen Stella IT" size="sm" className="w-8 h-8 border border-gray-200 dark:border-white/10" />
+                    <ProfilePlaceholder size="sm" className="w-8 h-8 border border-gray-200 dark:border-white/10" />
+                    <ProfilePlaceholder size="sm" className="w-8 h-8 border border-gray-200 dark:border-white/10" />
                   </div>
                 </div>
                 <div className="space-y-4 text-xs text-gray-600 dark:text-slate-300">

@@ -199,3 +199,13 @@ CSS animations available:
 ---
 
 Happy building! 🚀
+
+## Local environment
+
+Copy `.env.local.example` to `.env.local` and set values before running the dev server. At minimum, set the following for the built-in order/email API:
+
+- `EMAIL_USER` — SMTP username (or test SMTP service)
+- `EMAIL_PASS` — SMTP password
+- `EMAIL_FROM` — From address used in outgoing emails
+
+If you plan to add an admin area, also set `NEXTAUTH_SECRET` and `DATABASE_URL` as needed.
