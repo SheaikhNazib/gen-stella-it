@@ -1,0 +1,186 @@
+---
+title: "Next.js SEO Guide for Bangladesh Businesses (2026)"
+description: "Practical, technical SEO guide for Next.js websites targeting Bangladeshi audiences. Covers metadata, schema markup, Core Web Vitals, and local SEO."
+date: "2026-01-15"
+tags: ["seo", "next.js", "bangladesh", "technical"]
+author: "Gen Stella IT"
+published: true
+---
+
+Next.js is arguably the best framework for building SEO-friendly websites in 2026. Its built-in support for server-side rendering, static generation, image optimisation, and the new App Router metadata API gives you a significant head start over WordPress and other traditional CMS platforms.
+
+But having the right tool is only half the battle. Here's how to use it properly to rank for Bangladeshi audiences.
+
+---
+
+## Why Next.js is Great for SEO
+
+Before we dive into specifics, let's understand the core SEO advantages:
+
+1. **Server-rendered HTML** — Search engines receive fully rendered content, not blank JS shells
+2. **Built-in `<Image>` optimisation** — Serves AVIF/WebP, prevents layout shift (CLS)
+3. **App Router metadata API** — Type-safe `generateMetadata()` for every page
+4. **`generateStaticParams()`** — Static pages for all dynamic routes (blog, portfolio, etc.)
+5. **`generateSitemaps()`** — Automatic XML sitemaps
+
+---
+
+## Step 1: The Metadata API
+
+Every page should export a `metadata` object or a `generateMetadata()` function. Using the App Router:
+
+```typescript
+// app/services/page.tsx
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Web Development Services | Gen Stella IT Bangladesh',
+  description: 'Professional web, mobile, and cloud development services in Bangladesh. React, Next.js, Node.js experts.',
+  openGraph: {
+    title: 'Web Development Services — Gen Stella IT',
+    description: 'Expert web and app development in Bangladesh.',
+    url: 'https://genstellait.site/services',
+    images: [{ url: '/og-services.png', width: 1200, height: 630 }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+  },
+  alternates: {
+    canonical: 'https://genstellait.site/services',
+  },
+}
+```
+
+**Key rule:** Every page must have a unique `title` and `description`. Never duplicate them.
+
+---
+
+## Step 2: Schema Markup (JSON-LD)
+
+Schema markup helps Google understand your business and can trigger rich results. For a Bangladeshi IT company, the most valuable schemas are:
+
+### LocalBusiness Schema
+```typescript
+// components/seo/local-business-schema.tsx
+export function LocalBusinessSchema() {
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{
+        __html: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "ITCompany",
+          "name": "Gen Stella IT",
+          "url": "https://genstellait.site",
+          "email": "genstellait@gmail.com",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Dhaka",
+            "addressCountry": "BD"
+          },
+          "areaServed": ["Bangladesh", "Global"],
+          "serviceType": ["Web Development", "Mobile App Development", "Cloud Services"]
+        })
+      }}
+    />
+  )
+}
+```
+
+### Article Schema for Blog Posts
+Add `Article` schema to every blog post:
+```typescript
+{
+  "@type": "Article",
+  "headline": post.title,
+  "datePublished": post.date,
+  "author": { "@type": "Organization", "name": "Gen Stella IT" }
+}
+```
+
+---
+
+## Step 3: Core Web Vitals for Bangladesh
+
+Bangladesh users often have slower mobile connections (3G/4G). Core Web Vitals are Google's primary UX quality signals, and they matter more in mobile-heavy markets.
+
+### Largest Contentful Paint (LCP) — Target: under 2.5s
+- Use `<Image>` with `priority` on hero images
+- Host fonts via `next/font` (eliminates font layout shift)
+- Enable `sharp` for server-side image processing
+
+### Cumulative Layout Shift (CLS) — Target: under 0.1
+- Always specify `width` and `height` on images
+- Reserve space for dynamic content (skeleton loaders)
+- Avoid inserting content above existing content
+
+### Interaction to Next Paint (INP) — Target: under 200ms
+- Keep JS bundles small with dynamic imports (`next/dynamic`)
+- Defer non-critical client components
+- Avoid long React rendering chains
+
+---
+
+## Step 4: Targeting Bangla Keywords
+
+Many Bangladeshi businesses miss a huge opportunity by only targeting English keywords. A large portion of local searches use Bangla script or transliterated Bangla.
+
+**Example keyword mapping:**
+| English | Bangla (Script) | Search Volume |
+|---|---|---|
+| web development company bangladesh | ওয়েব ডেভেলপমেন্ট কোম্পানি | High |
+| software company dhaka | সফটওয়্যার কোম্পানি ঢাকা | High |
+| mobile app developer | মোবাইল অ্যাপ ডেভেলপার বাংলাদেশ | Medium |
+
+Consider creating Bangla-language landing pages or a `[locale]` route for Bangla content at `/bn/`.
+
+---
+
+## Step 5: Sitemap and Robots.txt
+
+Next.js 13+ App Router can generate these automatically:
+
+```typescript
+// app/sitemap.ts
+import { MetadataRoute } from 'next'
+import { getAllBlogPosts } from '@/lib/blog'
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const posts = getAllBlogPosts()
+
+  return [
+    { url: 'https://genstellait.site', lastModified: new Date() },
+    { url: 'https://genstellait.site/services', lastModified: new Date() },
+    { url: 'https://genstellait.site/portfolio', lastModified: new Date() },
+    { url: 'https://genstellait.site/contact', lastModified: new Date() },
+    ...posts.map(p => ({
+      url: `https://genstellait.site/blog/${p.slug}`,
+      lastModified: new Date(p.frontmatter.date),
+    })),
+  ]
+}
+```
+
+```typescript
+// app/robots.ts
+export default function robots() {
+  return {
+    rules: { userAgent: '*', allow: '/' },
+    sitemap: 'https://genstellait.site/sitemap.xml',
+  }
+}
+```
+
+---
+
+## Common Mistakes to Avoid
+
+1. ❌ **Using `'use client'` on every page** — This disables SSR and hurts SEO. Only add it when you need browser APIs or interactivity.
+2. ❌ **Placeholder or duplicate meta descriptions** — Each page needs a unique description
+3. ❌ **Unoptimised images** — Large JPEG/PNG images destroy load times. Always use `next/image`
+4. ❌ **No canonical tags** — Duplicate content (HTTP + HTTPS, www + non-www) can hurt rankings
+5. ❌ **Ignoring mobile** — Run Lighthouse on mobile emulation, not just desktop
+
+---
+
+Need a website that follows all these best practices out of the box? [Get a quote from Gen Stella IT](/services/pricing) — SEO fundamentals are included in every project we build.

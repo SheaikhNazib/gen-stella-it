@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion'
 import AppShell from '@/components/layout/AppShell'
 import Link from 'next/link'
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
+import ProfilePlaceholder from '@/components/ui/profile-placeholder'
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion'
 import { teamMembers } from '@/data/team'
 import { testimonials } from '@/data/testimonials'
@@ -113,45 +113,44 @@ export default function AboutPage() {
               className="relative"
             >
               <div className="absolute -inset-1 bg-gradient-to-br from-blue-500/40 via-purple-500/40 to-transparent blur-xl rounded-3xl" />
-              <div className="relative rounded-3xl bg-slate-950/90 dark:bg-slate-900/90 border border-white/10 overflow-hidden p-6">
+              <div className="relative rounded-3xl bg-white/70 dark:bg-slate-900/90 border border-gray-200/70 dark:border-white/10 overflow-hidden p-6">
                 <div className="flex items-center justify-between mb-6">
                   <div>
-                    <p className="text-xs uppercase tracking-[0.25em] text-blue-300/90">Profile</p>
-                    <p className="text-sm text-slate-200 mt-1">Gen Stella IT · Studio</p>
+                    <p className="text-xs uppercase tracking-[0.25em] text-blue-600 dark:text-blue-300/90">Profile</p>
+                    <p className="text-sm text-gray-700 dark:text-slate-200 mt-1">Gen Stella IT · Studio</p>
                   </div>
                   <div className="flex -space-x-2">
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-400 to-purple-500 border border-slate-900" />
-                    <div className="w-8 h-8 rounded-full bg-slate-800 border border-slate-900" />
-                    <div className="w-8 h-8 rounded-full bg-slate-700 border border-slate-900" />
+                    <ProfilePlaceholder name="Gen Stella IT" size="sm" className="w-8 h-8 border border-slate-900" />
+                    <ProfilePlaceholder size="sm" className="w-8 h-8 border border-slate-900" />
+                    <ProfilePlaceholder size="sm" className="w-8 h-8 border border-slate-900" />
                   </div>
                 </div>
-
-                <div className="space-y-4 text-xs text-slate-300">
+                <div className="space-y-4 text-xs text-gray-600 dark:text-slate-300">
                   <div className="flex justify-between">
                     <span>Core stack</span>
-                    <span className="font-medium text-white">Next.js · NestJS · Express · React · Node</span>
+                    <span className="font-medium text-gray-900 dark:text-white">Next.js · NestJS · Express · React · Node</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Specialties</span>
-                    <span className="font-medium text-white">Product engineering · AI · Cloud</span>
+                    <span className="font-medium text-gray-900 dark:text-white">Product engineering · AI · Cloud</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Engagement</span>
-                    <span className="font-medium text-white">Fixed-price (scope-dependent)</span>
+                    <span className="font-medium text-gray-900 dark:text-white">Fixed-price (scope-dependent)</span>
                   </div>
                 </div>
 
-                <div className="mt-6 grid grid-cols-3 gap-3 text-center text-xs text-slate-300">
-                  <div className="rounded-xl bg-white/5 border border-white/10 py-3">
-                    <p className="text-lg font-semibold text-white">—</p>
+                <div className="mt-6 grid grid-cols-3 gap-3 text-center text-xs">
+                  <div className="rounded-xl bg-gray-50 border border-gray-200 py-3 dark:bg-white/5 dark:border-white/10">
+                    <p className="text-lg font-semibold text-gray-900 dark:text-white">—</p>
                     <p>Products shipped</p>
                   </div>
-                  <div className="rounded-xl bg-white/5 border border-white/10 py-3">
-                    <p className="text-lg font-semibold text-white">—</p>
+                  <div className="rounded-xl bg-gray-50 border border-gray-200 py-3 dark:bg-white/5 dark:border-white/10">
+                    <p className="text-lg font-semibold text-gray-900 dark:text-white">—</p>
                     <p>Countries</p>
                   </div>
-                  <div className="rounded-xl bg-white/5 border border-white/10 py-3">
-                    <p className="text-lg font-semibold text-white">—</p>
+                  <div className="rounded-xl bg-gray-50 border border-gray-200 py-3 dark:bg-white/5 dark:border-white/10">
+                    <p className="text-lg font-semibold text-gray-900 dark:text-white">—</p>
                     <p>Client retention</p>
                   </div>
                 </div>

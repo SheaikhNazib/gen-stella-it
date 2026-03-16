@@ -21,16 +21,58 @@ export interface PortfolioProject {
 }
 
 export const portfolioProjects: PortfolioProject[] = [
-  // {
-  //   id: "1",
-  //   slug: "project-name",
-  //   title: "Project Title",
-  //   description: "Full project description",
-  //   shortDescription: "Short description",
-  //   image: "/images/portfolio/project.jpg",
-  //   category: "Web Development",
-  //   technologies: ["Next.js", "React", "Tailwind CSS"],
-  //   link: "https://project-url.com",
-  //   date: "2024-01",
-  // },
+  {
+    id: '1',
+    slug: 'novachrono',
+    title: 'NovaChrono',
+    shortDescription: 'Luxury watch e-commerce platform with a premium dark-themed storefront.',
+    description:
+      'NovaChrono is a high-end watch e-commerce platform built for a curated collection of luxury timepieces. The project features a full product catalogue, cart, checkout, and a precision-engineered dark aesthetic that reflects the brand.',
+    image: '/portfolioImages/NovaChrono.jpeg',
+    category: 'E-Commerce',
+    technologies: ['Next.js', 'Tailwind CSS', 'TypeScript', 'Vercel'],
+    link: 'https://nova-chrono.vercel.app/',
+    results: [
+      'Sub-2s load time on mobile',
+      'Perfect Lighthouse SEO score',
+      'Full product catalogue with variant support',
+    ],
+    date: '2025-08',
+  },
+  {
+    id: '2',
+    slug: 'inventory-management',
+    title: 'Inventory Management System',
+    shortDescription: 'Full-featured inventory tracking dashboard with real-time stock management.',
+    description:
+      'A comprehensive inventory management system that allows businesses to track stock levels, manage assignments, monitor low-stock alerts, and generate reports — all in a clean admin dashboard.',
+    image: '/portfolioImages/InventoryManagement.jpeg',
+    category: 'Web Application',
+    technologies: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Prisma', 'PostgreSQL'],
+    link: 'https://niloyinventory.vercel.app/',
+    results: [
+      'Real-time inventory dashboard',
+      'Role-based access control',
+      'CSV export and bulk operations',
+    ],
+    date: '2025-05',
+  },
+  {
+    id: '3',
+    slug: 'whattocook',
+    title: 'What To Cook',
+    shortDescription: 'AI-powered recipe discovery platform that matches recipes to your ingredients.',
+    description:
+      'What To Cook is an AI-assisted recipe discovery platform where users input the ingredients they have and receive matching recipes instantly. Features bilingual support (English/Bangla), smart ingredient matching, and a large recipe database.',
+    image: '/portfolioImages/WhattoCook.jpeg',
+    category: 'AI / Web Application',
+    technologies: ['Next.js', 'TypeScript', 'Tailwind CSS', 'Firebase', 'AI Integration'],
+    link: 'https://whattocook-niloy.vercel.app/',
+    results: [
+      '500+ recipes in the database',
+      'Bilingual (English + Bangla)',
+      'Smart AI ingredient matching',
+    ],
+    date: '2025-02',
+  },
 ];
