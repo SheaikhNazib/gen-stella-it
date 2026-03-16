@@ -7,10 +7,11 @@ const __dirname = path.dirname(__filename)
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   typescript: {
+    // TODO: Remove once all type errors are fixed
     ignoreBuildErrors: true,
   },
   images: {
-    unoptimized: true,
+    formats: ['image/avif', 'image/webp'],
   },
   turbopack: {
     root: __dirname,

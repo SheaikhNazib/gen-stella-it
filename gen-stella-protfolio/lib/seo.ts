@@ -1,28 +1,62 @@
 /**
  * SEO Utilities
- * 
- * Metadata and SEO optimization utilities
- * TODO: Add dynamic metadata, open graph tags, structured data
+ *
+ * Generates per-page metadata (title, description, OG, Twitter Cards, canonical).
+ * Import `generatePageMetadata` in every page's `generateMetadata` export.
  */
 
-export const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+import type { Metadata } from 'next'
+import { siteConfig } from '@/config/site.config'
 
-export const SITE_METADATA = {
-  title: "Your Company Name - Tech Solutions",
-  description: "Your company description and value proposition",
-  keywords: ["tech", "software", "solutions"],
-  author: "Your Company",
-};
+interface PageSEO {
+  title?: string
+  description?: string
+  keywords?: string[]
+  image?: string
+  noIndex?: boolean
+  canonical?: string
+}
 
-export function generateMetadata(pageTitle: string, pageDescription: string) {
+export function generatePageMetadata({
+  title,
+  description,
+  keywords,
+  image,
+  noIndex,
+  canonical,
+}: PageSEO = {}): Metadata {
+  const pageTitle = title
+    ? siteConfig.seo.titleTemplate.replace('%s', title)
+    : siteConfig.seo.defaultTitle
+  const pageDescription = description || siteConfig.seo.defaultDescription
+  const pageImage = image || siteConfig.ogImage
+  const pageUrl = canonical
+    ? `${siteConfig.url}${canonical}`
+    : siteConfig.url
+
   return {
-    title: `${pageTitle} | ${SITE_METADATA.title}`,
+    title: pageTitle,
     description: pageDescription,
+    keywords: [...(keywords || []), ...siteConfig.seo.keywords],
+    authors: [{ name: siteConfig.name, url: siteConfig.url }],
+    creator: siteConfig.name,
+    metadataBase: new URL(siteConfig.url),
+    alternates: { canonical: pageUrl },
+    robots: noIndex ? { index: false, follow: false } : undefined,
     openGraph: {
-      title: pageTitle,
+      title: title || siteConfig.seo.defaultTitle,
       description: pageDescription,
-      url: BASE_URL,
-      type: "website",
+      url: pageUrl,
+      siteName: siteConfig.name,
+      images: [{ url: pageImage, width: 1200, height: 630 }],
+      locale: 'en_US',
+      type: 'website',
     },
-  };
+    twitter: {
+      card: 'summary_large_image',
+      title: title || siteConfig.seo.defaultTitle,
+      description: pageDescription,
+      images: [pageImage],
+    },
+  }
 }
