@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
 import type { NextRequest } from "next/server";
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const token = await getToken({ req: request });
   const isAuth = !!token;
   const isAdmin = token?.role === "ADMIN";
@@ -27,10 +27,10 @@ export async function middleware(request: NextRequest) {
         new URL(`/login?from=${encodeURIComponent(from)}`, request.url)
       );
     }
-    
+
     // Optional: Restricted admin only
     if (!isAdmin) {
-       return NextResponse.redirect(new URL("/", request.url));
+      return NextResponse.redirect(new URL("/", request.url));
     }
   }
 
