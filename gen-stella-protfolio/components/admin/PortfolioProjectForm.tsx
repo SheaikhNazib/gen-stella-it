@@ -20,6 +20,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Plus, X, Globe, Code2 } from "lucide-react";
 import { PortfolioProject } from "@/types/portfolio";
 import { cn } from "@/lib/utils";
+import { ImageUpload } from "@/components/ui/ImageUpload";
 
 interface PortfolioFormProps {
   initialData?: Partial<PortfolioProject>;
@@ -143,9 +144,13 @@ export function PortfolioProjectForm({ initialData, onSubmit }: PortfolioFormPro
                 name="image"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Main Image URL</FormLabel>
+                    <FormLabel>Main Image</FormLabel>
                     <FormControl>
-                      <Input placeholder="https://example.com/project-thumb.jpg" {...field} />
+                      <ImageUpload 
+                        value={field.value || ""} 
+                        onChange={field.onChange} 
+                        disabled={form.formState.isSubmitting}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -194,6 +199,96 @@ export function PortfolioProjectForm({ initialData, onSubmit }: PortfolioFormPro
                       }}
                     />
                   </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="link"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Live Project URL (Optional)</FormLabel>
+                    <FormControl>
+                      <Input placeholder="https://example.com" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="clientName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Client Name (Optional)</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Acme Inc." {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <FormField
+              control={form.control}
+              name="results"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Key Results</FormLabel>
+                  <div className="space-y-2 mb-2">
+                    {(field.value || []).map((result: string, i: number) => (
+                      <div key={i} className="flex items-center gap-2">
+                        <span className="flex-1 text-sm bg-slate-50 dark:bg-slate-900 px-3 py-2 rounded border">{result}</span>
+                        <button type="button" onClick={() => handleRemoveResult(i)} className="text-red-500 hover:text-red-700">
+                          <X className="h-4 w-4" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                  <Input
+                    placeholder="Add result (Press Enter)"
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        handleAddResult(e.currentTarget.value);
+                        e.currentTarget.value = "";
+                      }
+                    }}
+                  />
+                  <FormDescription>E.g. "50% increase in conversion rate"</FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="testimonialQuote"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Client Testimonial (Optional)</FormLabel>
+                  <FormControl>
+                    <Textarea placeholder="What the client said about this project..." className="min-h-[60px]" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="caseStudy"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Case Study Content (Optional)</FormLabel>
+                  <FormControl>
+                    <Textarea placeholder="Detailed case study write-up..." className="min-h-[100px]" {...field} />
+                  </FormControl>
+                  <FormDescription>Full case study shown on the project detail page.</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}

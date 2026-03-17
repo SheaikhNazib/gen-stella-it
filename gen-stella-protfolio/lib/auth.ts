@@ -2,7 +2,9 @@ import { db } from "@/lib/db";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { AuthOptions, DefaultSession } from "next-auth";
 import GitHubProvider from "next-auth/providers/github";
+import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
+import bcrypt from "bcryptjs";
 
 declare module "next-auth" {
   interface Session {
@@ -24,11 +26,11 @@ declare module "next-auth/jwt" {
   }
 }
 
-const ADMIN_GITHUB_USERNAMES = ["niloydiu", "niloykm"];
+const ADMIN_EMAILS = ["niloykumarmohonta@gmail.com"];
 
 export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(db),
-  secret: process.env.NEXTAUTH_SECRET || "stella-it-session-secret-2026",
+  secret: process.env.NEXTAUTH_SECRET,
   session: {
     strategy: "jwt",
   },
@@ -42,35 +44,76 @@ export const authOptions: AuthOptions = {
           name: profile.name || profile.login,
           email: profile.email,
           image: profile.avatar_url,
-          role: ADMIN_GITHUB_USERNAMES.includes(profile.login) ? "ADMIN" : "USER",
+          role: profile.email && ADMIN_EMAILS.includes(profile.email.toLowerCase()) ? "ADMIN" : "USER",
         };
       },
     }),
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      profile(profile) {
+        return {
+          id: profile.sub,
+          name: profile.name,
+          email: profile.email,
+          image: profile.picture,
+          role: profile.email && ADMIN_EMAILS.includes(profile.email.toLowerCase()) ? "ADMIN" : "USER",
+        };
+      }
+    }),
     CredentialsProvider({
-      name: "Credentials",
+      name: "credentials",
       credentials: {
-        username: { label: "Username", type: "text" },
+        identifier: { label: "Username or Email", type: "text" },
         password: { label: "Password", type: "password" }
       },
       async authorize(credentials) {
-        console.log("Credentials authorize called", { username: credentials?.username });
-        if (
-          credentials?.username === "admin" &&
-          credentials?.password === "admin2026"
-        ) {
-          const user = {
-            id: "admin-user",
-            name: "Stella Admin",
-            email: "admin@stella-it.com",
-            role: "ADMIN",
-          };
-          console.log("Credentials authorize: success", { id: user.id, name: user.name });
-          return user;
+        if (!credentials?.identifier || !credentials?.password) {
+          return null;
         }
-        console.log("Credentials authorize: failed for", { username: credentials?.username });
-        return null;
+
+        try {
+          const identifier = credentials.identifier.trim();
+
+          const user = await db.user.findFirst({
+            where: {
+              OR: [
+                { email: identifier.toLowerCase() },
+                { username: identifier }
+              ]
+            }
+          });
+
+          console.log("[Auth] Lookup for:", identifier, "→ found:", !!user);
+
+          if (!user || !user.password) {
+            return null;
+          }
+
+          const isPasswordValid = await bcrypt.compare(
+            credentials.password,
+            user.password
+          );
+
+          console.log("[Auth] Password valid:", isPasswordValid);
+
+          if (!isPasswordValid) {
+            return null;
+          }
+
+          return {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            image: user.image,
+            role: user.role,
+          };
+        } catch (error) {
+          console.error("[Auth] Error in authorize:", error);
+          return null;
+        }
       }
-    })
+    }),
   ],
   callbacks: {
     async session({ session, token }) {
@@ -80,42 +123,11 @@ export const authOptions: AuthOptions = {
       }
       return session;
     },
-    async jwt({ token, user, profile }) {
-      console.log("JWT callback invoked", { token, user, profile });
-      // Step 1: Initial login (from GitHub or Credentials)
+    async jwt({ token, user }) {
       if (user) {
-        token.role = (user as any).role || "USER";
         token.id = user.id;
-        return token;
+        token.role = user.role;
       }
-
-      // Step 2: Handle hardcoded admin session directly
-      if (token.id === "admin-user") {
-        token.role = "ADMIN";
-        return token;
-      }
-
-      // Step 3: Handle existing database users
-      try {
-        const dbUser = await db.user.findFirst({
-          where: {
-            email: token.email ?? undefined,
-          },
-        });
-
-        if (dbUser) {
-          return {
-            id: dbUser.id,
-            name: dbUser.name,
-            email: dbUser.email,
-            picture: dbUser.image,
-            role: dbUser.role,
-          };
-        }
-      } catch (error) {
-        console.error("JWT Callback DB Error:", error);
-      }
-
       return token;
     },
   },

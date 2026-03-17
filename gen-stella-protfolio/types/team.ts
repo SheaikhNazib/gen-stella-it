@@ -5,11 +5,9 @@ export interface TeamMember {
   bio: string
   image: string
   email?: string
-  social?: {
-    twitter?: string
-    linkedin?: string
-    github?: string
-  }
+  twitter?: string
+  linkedin?: string
+  github?: string
 }
 
 export interface Testimonial {

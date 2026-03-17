@@ -4,10 +4,13 @@ import React from 'react'
 
 type SizeKey = 'sm' | 'md' | 'lg'
 
+type ShapeKey = 'circle' | 'square' | 'rounded'
+
 type Props = {
   name?: string
   src?: string
   size?: SizeKey | number
+  shape?: ShapeKey
   className?: string
 }
 
@@ -54,13 +57,33 @@ function sizeClasses(size: SizeKey | number | undefined) {
   }
 }
 
-function isRasterImage(src?: string) {
-  return typeof src === 'string' && /\.(png|jpe?g|webp|avif|gif)(?:[?#].*)?$/i.test(src)
+function shapeClasses(shape: ShapeKey) {
+  switch (shape) {
+    case 'square':
+      return 'rounded-none'
+    case 'rounded':
+      return 'rounded-xl'
+    default:
+      return 'rounded-full'
+  }
 }
 
-export default function ProfilePlaceholder({ name, src, size = 'md', className = '' }: Props) {
+function isRasterImage(src?: string) {
+  if (!src) return false
+  const extensions = ['.jpg', '.jpeg', '.png', '.webp', '.gif', '.avif', '.svg']
+  return extensions.some((ext) => src.toLowerCase().endsWith(ext)) || src.startsWith('http') || src.startsWith('/')
+}
+
+export default function ProfilePlaceholder({
+  name, 
+  src, 
+  size = 'md', 
+  shape = 'circle',
+  className = '' 
+}: Props) {
   const initials = getInitials(name)
   const { style, className: sizeClass } = sizeClasses(size)
+  const shapeClass = shapeClasses(shape)
   const bgIndex = name ? hashName(name) % BG_VARIANTS.length : Math.floor(Math.random() * BG_VARIANTS.length)
   const bgClass = BG_VARIANTS[bgIndex]
 
@@ -71,7 +94,7 @@ export default function ProfilePlaceholder({ name, src, size = 'md', className =
       <img
         src={src}
         alt={name ?? 'User avatar'}
-        className={`rounded-full object-cover ${sizeClass} ${className}`}
+        className={`${shapeClass} object-cover ${sizeClass} ${className}`}
         style={style as React.CSSProperties}
       />
     )
@@ -79,7 +102,7 @@ export default function ProfilePlaceholder({ name, src, size = 'md', className =
 
   return (
     <div
-      className={`rounded-full flex items-center justify-center text-white font-medium ${bgClass} ${sizeClass} ${className}`}
+      className={`${shapeClass} flex items-center justify-center text-white font-medium ${bgClass} ${sizeClass} ${className}`}
       style={style as React.CSSProperties}
       aria-hidden
     >

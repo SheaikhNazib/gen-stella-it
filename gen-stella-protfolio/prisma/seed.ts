@@ -22,9 +22,9 @@ async function main() {
         bio: member.bio,
         image: member.image,
         email: member.email,
-        twitter: member.social?.twitter,
-        linkedin: member.social?.linkedin,
-        github: member.social?.github,
+        twitter: member.twitter,
+        linkedin: member.linkedin,
+        github: member.github,
       },
     })
   }

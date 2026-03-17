@@ -16,6 +16,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Star, User, Building } from "lucide-react";
+import { ImageUpload } from "@/components/ui/ImageUpload";
+import ProfilePlaceholder from "@/components/ui/profile-placeholder";
 
 interface TestimonialFormProps {
   initialData?: any;
@@ -30,7 +32,7 @@ export function TestimonialForm({ initialData, onSubmit }: TestimonialFormProps)
       author: "",
       title: "",
       company: "",
-      image: "https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&q=80&w=300&h=300",
+      image: "",
       rating: 5,
     },
   });
@@ -124,7 +126,25 @@ export function TestimonialForm({ initialData, onSubmit }: TestimonialFormProps)
                 />
             </div>
 
-            <Button type="submit" className="w-full">
+            <FormField
+              control={form.control}
+              name="image"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Author Photo (Optional)</FormLabel>
+                  <FormControl>
+                    <ImageUpload 
+                      value={field.value || ""} 
+                      onChange={field.onChange} 
+                      disabled={form.formState.isSubmitting}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
               {initialData ? "Update Testimonial" : "Create Testimonial"}
             </Button>
           </form>
@@ -135,26 +155,33 @@ export function TestimonialForm({ initialData, onSubmit }: TestimonialFormProps)
         <h3 className="text-lg font-semibold mb-4 text-muted-foreground uppercase tracking-wider">
           Testimonial Preview
         </h3>
-        <div className="p-8 rounded-xl bg-slate-50 border border-dashed border-slate-200">
-            <div className="bg-white p-8 rounded-2xl shadow-xl relative max-w-sm mx-auto">
-                <div className="flex gap-1 mb-4">
-                    {[...Array(preview.rating)].map((_, i) => (
+        <div className="p-12 rounded-xl bg-slate-50 border-2 border-dashed border-slate-200 min-h-[400px] flex items-center justify-center">
+            <div className="bg-white p-8 rounded-2xl shadow-xl border border-slate-100 relative max-w-[380px] w-full transition-all animate-in fade-in zoom-in duration-300">
+                <div className="flex gap-1 mb-6">
+                    {[...Array(preview.rating ?? 5)].map((_, i) => (
                         <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
                     ))}
-                    {[...Array(5 - preview.rating)].map((_, i) => (
+                    {[...Array(5 - (preview.rating ?? 5))].map((_, i) => (
                         <Star key={i} className="w-4 h-4 text-slate-200" />
                     ))}
                 </div>
-                <blockquote className="text-lg text-slate-700 italic leading-relaxed mb-6">
-                    "{preview.quote || "The quote snippet will show up here as a preview for the testimonial section."}"
+                <blockquote className="text-lg text-slate-700 italic leading-relaxed mb-8">
+                    "{preview.quote || "The quote snippet will show up here as a preview for the testimonial card."}"
                 </blockquote>
-                <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-full overflow-hidden bg-slate-100 border border-slate-100">
-                        <img src={preview.image} className="w-full h-full object-cover" />
-                    </div>
+                <div className="flex items-center gap-4 border-t pt-6">
+                    <ProfilePlaceholder 
+                      name={preview.author || "User"} 
+                      src={preview.image} 
+                      size="md" 
+                      className="w-12 h-12 shadow-sm"
+                    />
                     <div>
-                        <div className="font-bold text-slate-900">{preview.author || "Author Name"}</div>
-                        <div className="text-sm text-slate-500">{preview.title || "Job Title"}</div>
+                        <div className="font-extrabold text-slate-900 leading-none">
+                          {preview.author || "Author Name"}
+                        </div>
+                        <div className="text-xs font-semibold text-blue-600 mt-1 uppercase tracking-wider">
+                          {preview.title || "Job Title"} @ {preview.company || "Company"}
+                        </div>
                     </div>
                 </div>
             </div>

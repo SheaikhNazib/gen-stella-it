@@ -12,11 +12,9 @@ export interface TeamMember {
   bio: string;
   image: string;
   email?: string;
-  social?: {
-    twitter?: string;
-    linkedin?: string;
-    github?: string;
-  };
+  twitter?: string;
+  linkedin?: string;
+  github?: string;
 }
 
 export const teamMembers: TeamMember[] = [
@@ -27,7 +25,7 @@ export const teamMembers: TeamMember[] = [
     bio: 'Leads product strategy and frontend engineering — builds delightful, performant UIs.',
     image: '/team/member-1.svg',
     email: '',
-    social: { twitter: '', linkedin: '', github: '' },
+    twitter: '', linkedin: '', github: '',
   },
   {
     id: '2',
@@ -36,7 +34,7 @@ export const teamMembers: TeamMember[] = [
     bio: 'Designs resilient APIs and services for scale and maintainability.',
     image: '/team/member-2.svg',
     email: '',
-    social: { twitter: '', linkedin: '', github: '' },
+    twitter: '', linkedin: '', github: '',
   },
   {
     id: '3',
@@ -45,7 +43,7 @@ export const teamMembers: TeamMember[] = [
     bio: 'Shapes UX, interaction, and product thinking that converts and retains users.',
     image: '/team/member-3.svg',
     email: '',
-    social: { twitter: '', linkedin: '', github: '' },
+    twitter: '', linkedin: '', github: '',
   },
   {
     id: '4',
@@ -54,6 +52,6 @@ export const teamMembers: TeamMember[] = [
     bio: 'Automates delivery, reliability, and cloud operations for fast iteration.',
     image: '/team/member-4.svg',
     email: '',
-    social: { twitter: '', linkedin: '', github: '' },
+    twitter: '', linkedin: '', github: '',
   },
 ];
