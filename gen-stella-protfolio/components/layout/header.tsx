@@ -86,7 +86,7 @@ export function Header() {
               <DarkModeToggle />
             </div>
             <Link
-              href="/services/pricing"
+              href="/contact"
               className="hidden md:inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-blue-600 to-purple-500 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:opacity-90 transition-opacity"
             >
               Get a Quote

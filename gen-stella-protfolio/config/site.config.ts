@@ -35,6 +35,7 @@ export const siteConfig = {
     { href: '/', label: 'Home' },
     { href: '/about', label: 'About' },
     { href: '/services', label: 'Services' },
+    { href: '/services/pricing', label: 'Pricing' },
     { href: '/portfolio', label: 'Portfolio' },
     { href: '/blog', label: 'Blog' },
     { href: '/contact', label: 'Contact' },

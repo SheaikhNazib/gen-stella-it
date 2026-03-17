@@ -88,7 +88,7 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
               className="w-full mt-4"
             >
               <Link
-                href="/services/pricing"
+                href="/contact"
                 className="block w-full text-center py-3 text-lg font-semibold rounded-xl bg-gradient-to-r from-blue-600 to-purple-500 text-white"
               >
                 Get a Quote

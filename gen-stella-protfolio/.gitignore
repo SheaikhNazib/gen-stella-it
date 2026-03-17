@@ -11,3 +11,5 @@ node_modules/
 .env*
 .env*.local
 .DS_Store
+# Ignore local cookie jars used for testing
+cookies.txt
