@@ -1,0 +1,138 @@
+---
+title: "Building an E-Commerce Website in Bangladesh: 2026 Complete Guide"
+description: "Everything you need to know about building an online store in Bangladesh — platform choice, payment gateways (SSLCommerz, bKash), hosting, and costs."
+date: "2025-12-20"
+tags: ["ecommerce", "bangladesh", "payment gateway", "web development"]
+author: "Gen Stella IT"
+published: true
+---
+
+E-commerce in Bangladesh is booming. With over 50 million smartphone users, improving mobile internet penetration, and growing digital payment adoption (bKash, Nagad, Rocket), 2026 is a great time to launch or scale your online store.
+
+But building a Bangladeshi e-commerce site has unique challenges you won't find in Western tutorials: local payment gateway integration, Bangla language support, and a customer base that predominantly shops on mobile. This guide covers everything you need to know.
+
+---
+
+## The Bangladesh E-Commerce Market in 2026
+
+Key statistics worth knowing before you invest:
+- **70%+ of sessions are mobile** — mobile-first is mandatory, not optional
+- **bKash has 60M+ users** — if you don't accept bKash, you're leaving money on the table
+- **Cash on delivery (COD)** remains popular — integrate a COD option even with digital payments
+- **Local competitors**: Chaldal, Shajgoj, and hundreds of category-specific stores set customer expectations
+
+---
+
+## Platform Choice: Custom vs WooCommerce vs Shopify
+
+### Shopify
+**Pros:** Fast setup, reliable infrastructure, beautiful themes
+**Cons:** Monthly fee in USD ($29–$299/month), limited local payment gateway support, no Bangla interface out of the box, difficult to customise deeply
+
+**Verdict:** Suitable for Bangladeshi businesses that sell internationally. Poor choice for domestic-focused stores due to payment gateway limitations.
+
+### WooCommerce (WordPress)
+**Pros:** Free, huge ecosystem, some Bangladeshi payment plugins exist
+**Cons:** Slow by default, security vulnerabilities common, scaling is painful, requires constant maintenance
+
+**Verdict:** Acceptable for very small stores with tight budgets. Will cause problems at scale.
+
+### Custom Next.js + Prisma + PostgreSQL
+**Pros:** Fastest performance, full control, native SSLCommerz/bKash integration, SEO-optimised by default, scales to millions of products
+**Cons:** Higher upfront development cost, requires a skilled team
+
+**Verdict:** Best choice for any serious Bangladeshi e-commerce business. The performance and SEO advantages will compound over time.
+
+---
+
+## Payment Gateway Integration
+
+### SSLCommerz (Most Popular)
+SSLCommerz is the most widely used payment gateway in Bangladesh, supporting:
+- Credit/debit cards (Visa, Mastercard)
+- Mobile banking (bKash, Nagad, Rocket, Dutch-Bangla)
+- Internet banking (most major BD banks)
+- Multi-currency
+
+**Integration approach with Next.js:**
+SSLCommerz uses a redirect model. Your checkout page initiates a payment session via their API, redirects the customer to their hosted payment page, and then redirects back to your success/fail URL via a POST callback.
+
+```typescript
+// app/api/payment/initiate/route.ts
+const sslData = {
+  store_id: process.env.SSLCOMMERZ_STORE_ID,
+  store_passwd: process.env.SSLCOMMERZ_STORE_PASS,
+  total_amount: orderTotal,
+  currency: 'BDT',
+  tran_id: orderId,
+  success_url: `${process.env.NEXT_PUBLIC_URL}/api/payment/success`,
+  fail_url: `${process.env.NEXT_PUBLIC_URL}/api/payment/fail`,
+  cancel_url: `${process.env.NEXT_PUBLIC_URL}/cart`,
+  cus_name: customer.name,
+  cus_email: customer.email,
+  cus_phone: customer.phone,
+  product_name: 'Order #' + orderId,
+  shipping_method: 'NO',
+  product_category: 'general',
+}
+```
+
+### bKash
+bKash offers a separate merchant API for websites. The integration is more complex and requires a merchant agreement with bKash. For smaller stores, using SSLCommerz (which includes bKash as a payment method) is simpler.
+
+---
+
+## Must-Have Features for Bangladesh E-Commerce
+
+### 1. Bengali language support
+Even if your product descriptions are in English, consider:
+- Bengali number formatting (`১,২৩,৪৫৬ টাকা` not `$1,234.56`)
+- Language toggle (Bangla / English)
+- Bangladeshi address format (District, Upazila, Union)
+
+### 2. Delivery zone management
+Bangladesh has 8 divisions, 64 districts, and 495 upazilas. Your delivery cost and availability should vary by zone. Build a district-based shipping calculator.
+
+### 3. COD order management
+Cash on delivery orders need a workflow: order placed → confirmed by phone → dispatched → delivered + payment collected. Build this into your admin panel.
+
+### 4. Mobile-optimised checkout
+The standard multi-step checkout (5+ steps) kills conversion on mobile. Aim for:
+- Guest checkout (no forced account creation)
+- Saved addresses
+- One-tap payment with saved payment methods
+- Under 3 steps from cart to confirmation
+
+---
+
+## Hosting for Bangladeshi E-Commerce
+
+For a custom Next.js store, we recommend:
+
+| Option | Cost/Month | Best For |
+|---|---|---|
+| Vercel (Pro) | ~$20 USD | Frontend + API routes |
+| DigitalOcean App Platform | ~$12–25 USD | Full-stack + DB |
+| DigitalOcean VPS (2GB) | ~$12 USD | High-traffic, full control |
+
+For the database (PostgreSQL), use **Supabase** (free tier is generous) or a managed DigitalOcean Managed Database.
+
+---
+
+## Cost Summary
+
+| Component | Cost Range (BDT) |
+|---|---|
+| Custom Next.js store development | ৳45,000–1,50,000 |
+| SSLCommerz merchant account | Free (transaction fees apply) |
+| Domain (.com.bd) | ৳1,500–2,500/year |
+| Hosting (Vercel + DB) | ৳5,000–8,000/month |
+| Maintenance retainer | ৳5,000–15,000/month |
+
+---
+
+## Ready to Build?
+
+Gen Stella IT has built e-commerce platforms for Bangladeshi businesses with full SSLCommerz integration, mobile-optimised checkout, and admin inventory panels.
+
+[Get an instant quote for your e-commerce project →](/services/pricing)
