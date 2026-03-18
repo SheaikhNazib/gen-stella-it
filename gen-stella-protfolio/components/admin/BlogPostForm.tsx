@@ -16,7 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { X, Save, Eye, Layout, Type, Globe, Clock, Tag, Image as ImageIcon, CheckCircle2 } from "lucide-react";
+import { X, Save, Eye, Layout, Type, Globe, Clock, Tag, Search, Image as ImageIcon, CheckCircle2 } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { RichTextEditor } from "@/components/ui/RichTextEditor";
 import { ImageUpload } from "@/components/ui/ImageUpload";
@@ -464,35 +464,6 @@ export function BlogPostForm({ initialData, onSubmit }: BlogPostFormProps) {
                 </div>
              </div>
           </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-          Blog Card Preview
-        </h3>
-        <div className="p-4 rounded-xl bg-slate-50 border border-dashed border-slate-200">
-            <div className="bg-white rounded-2xl shadow-xl overflow-hidden max-w-sm mx-auto group">
-                <div className="aspect-[16/9] overflow-hidden bg-slate-100">
-                    <img 
-                        src={preview.featuredImage} 
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
-                    />
-                </div>
-                <div className="p-6">
-                    <div className="flex items-center gap-4 text-xs font-semibold text-blue-600 uppercase tracking-wider mb-3">
-                        {preview.category}
-                        <span className="text-slate-300">•</span>
-                        {preview.readingTime}
-                    </div>
-                    <h4 className="text-xl font-bold text-slate-900 group-hover:text-blue-600 transition-colors line-clamp-2">
-                        {preview.title || "Post Title Preview"}
-                    </h4>
-                    <p className="mt-3 text-slate-600 text-sm line-clamp-3">
-                        {preview.description || "A quick preview of the blog post's content summary for the main listing page."}
-                    </p>
-                </div>
-            </div>
         </div>
       </div>
     </div>

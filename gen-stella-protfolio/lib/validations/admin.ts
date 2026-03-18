@@ -1,10 +1,40 @@
 import * as z from "zod";
 
+const commaSeparatedList = z
+  .string()
+  .optional()
+  .or(z.literal(""))
+  .transform((value) =>
+    (value ?? "")
+      .split(",")
+      .map((item) => item.trim())
+      .filter(Boolean)
+  );
+
 export const teamMemberSchema = z.object({
   name: z.string().min(1, "Name is required"),
   role: z.string().min(1, "Role is required"),
+  expertise: z.array(z.string()).default([]),
   bio: z.string().min(1, "Bio is required"),
   image: z.string().min(1, "Image is required"),
+  imagePositionX: z.coerce.number().min(0).max(100).catch(50).default(50),
+  imagePositionY: z.coerce.number().min(0).max(100).catch(50).default(50),
+  imageScale: z.coerce.number().min(0.5).max(3).catch(1).default(1),
+  email: z.string().email().optional().or(z.literal("")),
+  twitter: z.string().optional().or(z.literal("")),
+  linkedin: z.string().optional().or(z.literal("")),
+  github: z.string().optional().or(z.literal("")),
+});
+
+export const teamMemberFormSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  role: z.string().min(1, "Role is required"),
+  expertise: commaSeparatedList,
+  bio: z.string().min(1, "Bio is required"),
+  image: z.string().min(1, "Image is required"),
+  imagePositionX: z.coerce.number().min(0).max(100).catch(50).default(50),
+  imagePositionY: z.coerce.number().min(0).max(100).catch(50).default(50),
+  imageScale: z.coerce.number().min(0.5).max(3).catch(1).default(1),
   email: z.string().email().optional().or(z.literal("")),
   twitter: z.string().optional().or(z.literal("")),
   linkedin: z.string().optional().or(z.literal("")),

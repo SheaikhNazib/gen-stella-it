@@ -2,8 +2,12 @@ export interface TeamMember {
   id: string
   name: string
   role: string
+  expertise?: string[]
   bio: string
   image: string
+  imagePositionX?: number
+  imagePositionY?: number
+  imageScale?: number
   email?: string
   twitter?: string
   linkedin?: string

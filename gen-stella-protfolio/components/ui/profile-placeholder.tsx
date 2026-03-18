@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 type SizeKey = 'sm' | 'md' | 'lg'
 
@@ -11,6 +11,9 @@ type Props = {
   src?: string
   size?: SizeKey | number
   shape?: ShapeKey
+  imagePositionX?: number
+  imagePositionY?: number
+  imageScale?: number
   className?: string
 }
 
@@ -24,7 +27,6 @@ const BG_VARIANTS = [
   'bg-sky-500',
   'bg-pink-500',
 ]
-
 function hashName(name: string) {
   let h = 0
   for (let i = 0; i < name.length; i++) {
@@ -79,24 +81,65 @@ export default function ProfilePlaceholder({
   src, 
   size = 'md', 
   shape = 'circle',
+  imagePositionX = 50,
+  imagePositionY = 50,
+  imageScale = 1,
   className = '' 
 }: Props) {
+  const imgRef = useRef<HTMLImageElement | null>(null)
+  const [imgError, setImgError] = useState(false)
+  const [imgLoaded, setImgLoaded] = useState(false)
   const initials = getInitials(name)
+  const cleanSrc = src?.trim() || ''
   const { style, className: sizeClass } = sizeClasses(size)
   const shapeClass = shapeClasses(shape)
   const bgIndex = name ? hashName(name) % BG_VARIANTS.length : Math.floor(Math.random() * BG_VARIANTS.length)
   const bgClass = BG_VARIANTS[bgIndex]
+  const showImage = isRasterImage(cleanSrc) && !!cleanSrc && !imgError
 
-  const showImage = isRasterImage(src)
+  useEffect(() => {
+    setImgError(false)
+    setImgLoaded(false)
+  }, [cleanSrc])
+
+  useEffect(() => {
+    if (!showImage) {
+      return
+    }
+
+    const image = imgRef.current
+    if (image?.complete && image.naturalWidth > 0) {
+      setImgLoaded(true)
+    }
+  }, [showImage, cleanSrc])
 
   if (showImage) {
     return (
-      <img
-        src={src}
-        alt={name ?? 'User avatar'}
-        className={`${shapeClass} object-cover ${sizeClass} ${className}`}
+      <div
+        className={`${shapeClass} overflow-hidden ${sizeClass} ${className} relative bg-slate-100`}
         style={style as React.CSSProperties}
-      />
+      >
+        {!imgLoaded && (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-full bg-slate-200 animate-pulse" />
+          </div>
+        )}
+        <img
+          ref={imgRef}
+          src={cleanSrc}
+          alt={name ?? 'User avatar'}
+          className="h-full w-full object-cover"
+          onLoad={() => setImgLoaded(true)}
+          onError={() => setImgError(true)}
+          style={{
+            objectPosition: `${imagePositionX}% ${imagePositionY}%`,
+            transform: `scale(${imageScale})`,
+            transformOrigin: 'center center',
+            transition: 'opacity 120ms ease-in-out',
+            opacity: imgLoaded ? 1 : 0,
+          }}
+        />
+      </div>
     )
   }
 

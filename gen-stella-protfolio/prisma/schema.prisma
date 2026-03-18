@@ -67,8 +67,12 @@ model TeamMember {
   id        String   @id @default(cuid())
   name      String
   role      String
+  expertise String[]
   bio       String   @db.Text
   image     String
+  imagePositionX Int @default(50)
+  imagePositionY Int @default(50)
+  imageScale     Float @default(1)
   email     String?
   twitter   String?
   linkedin  String?

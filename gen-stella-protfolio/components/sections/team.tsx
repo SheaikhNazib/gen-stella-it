@@ -68,15 +68,26 @@ export function TeamSection({ members = [] }: { members?: TeamMember[] }) {
     })
   }
 
-  const handleWheel = (event: React.WheelEvent<HTMLDivElement>) => {
-    const container = scrollContainerRef.current
-    if (!container) return
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
 
-    if (Math.abs(event.deltaY) > Math.abs(event.deltaX)) {
-      event.preventDefault()
-      container.scrollLeft += event.deltaY
-    }
-  }
+    const handleNativeWheel = (e: WheelEvent) => {
+      // If we're scrolling more vertically than horizontally
+      if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+        // Prevent default vertical scroll to map it to horizontal
+        e.preventDefault();
+        container.scrollLeft += e.deltaY;
+      }
+    };
+
+    // Add with { passive: false } to allow e.preventDefault()
+    container.addEventListener("wheel", handleNativeWheel, { passive: false });
+
+    return () => {
+      container.removeEventListener("wheel", handleNativeWheel);
+    };
+  }, [members]);
 
   if (!members || members.length === 0) {
     return (
@@ -117,7 +128,6 @@ export function TeamSection({ members = [] }: { members?: TeamMember[] }) {
       <div
         ref={scrollContainerRef}
         onScroll={checkScroll}
-        onWheel={handleWheel}
         className="flex gap-6 overflow-x-auto overflow-y-hidden pb-3 pr-8 scrollbar-hide"
         style={{ scrollBehavior: 'smooth', WebkitOverflowScrolling: 'touch' }}
       >
@@ -130,6 +140,7 @@ export function TeamSection({ members = [] }: { members?: TeamMember[] }) {
             transition={{ delay: index * 0.06, duration: 0.45, ease: 'easeOut' }}
             className="group relative flex-shrink-0 w-[24rem] sm:w-[28rem]"
           >
+            
             <div className="relative h-full p-[1px] rounded-3xl overflow-hidden bg-slate-200 dark:bg-slate-800 transition-all duration-500 group-hover:bg-gradient-to-r group-hover:from-blue-500/40 group-hover:to-slate-400/40 group-hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] dark:group-hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.4)]">
               <Card className="h-full border-none bg-white dark:bg-slate-950 rounded-[23px] overflow-hidden flex flex-row transition-all duration-500">
                 <div className="w-[38%] min-w-[9.5rem] p-6 flex items-center justify-center bg-slate-50/70 dark:bg-slate-900/30 border-r border-slate-100 dark:border-slate-800/50">
@@ -139,6 +150,9 @@ export function TeamSection({ members = [] }: { members?: TeamMember[] }) {
                     <ProfilePlaceholder
                       name={m.name}
                       src={m.image}
+                      imagePositionX={m.imagePositionX ?? 50}
+                      imagePositionY={m.imagePositionY ?? 50}
+                      imageScale={m.imageScale ?? 1}
                       size="lg"
                       className="w-28 h-28 sm:w-32 sm:h-32 grayscale-[0.2] group-hover:grayscale-0 transition-all duration-700 object-cover rounded-full ring-4 ring-white dark:ring-slate-950 shadow-[0_12px_30px_-18px_rgba(15,23,42,0.35)]"
                     />
@@ -160,10 +174,24 @@ export function TeamSection({ members = [] }: { members?: TeamMember[] }) {
                       <h3 className="text-lg font-bold tracking-tight text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors line-clamp-2">
                         {m.name}
                       </h3>
-                      <div className="inline-flex items-center text-xs font-semibold uppercase tracking-widest text-blue-600 dark:text-blue-500">
-                        {m.role}
+                      <div className="flex flex-wrap gap-2">
+                        {m.role.split(',').map((roleItem) => (
+                          <span key={`${m.id}-${roleItem}`} className="inline-flex items-center rounded-full bg-blue-50 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-blue-600 dark:bg-blue-950/40 dark:text-blue-400">
+                            {roleItem.trim()}
+                          </span>
+                        ))}
                       </div>
                     </div>
+
+                    {m.expertise && m.expertise.length > 0 && (
+                      <div className="flex flex-wrap gap-2">
+                        {m.expertise.map((item) => (
+                          <span key={`${m.id}-expertise-${item}`} className="rounded-full border border-slate-200 px-2.5 py-1 text-[10px] font-medium text-slate-600 dark:border-slate-700 dark:text-slate-300">
+                            {item}
+                          </span>
+                        ))}
+                      </div>
+                    )}
 
                     {m.bio && (
                       <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed line-clamp-3">

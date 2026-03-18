@@ -1,4 +1,5 @@
 import { db } from '@/lib/db'
+import AppShell from '@/components/layout/AppShell'
 import { AboutContent } from '@/components/sections/about-content'
 import { type TeamMember } from '@/data/team'
 
@@ -22,28 +23,35 @@ export default async function AboutPage() {
     role: member.role,
     image: member.image,
     bio: member.bio || "",
-    social: {
-      twitter: member.twitter || undefined,
-      github: member.github || undefined,
-      linkedin: member.linkedin || undefined,
-    }
+    imagePositionX: member.imagePositionX ?? 50,
+    imagePositionY: member.imagePositionY ?? 50,
+    imageScale: member.imageScale ?? 1,
+    expertise: member.expertise ?? [],
+    twitter: member.twitter || undefined,
+    github: member.github || undefined,
+    linkedin: member.linkedin || undefined,
   }))
 
-  // Fetch testimonials from DB (if exists) or fallback to data
+  // Fetch testimonials from DB
   const dbTestimonials = await db.testimonial.findMany({
     take: 6,
     orderBy: {
       createdAt: 'desc'
     }
-  }).catch(() => [])
+  }).catch((error) => {
+    console.error('Failed to load testimonials for /about', error)
+    return []
+  })
 
   return (
-    <main className="min-h-screen pt-16">
-      <AboutContent 
-        teamMembers={teamMembers} 
-        testimonials={dbTestimonials} 
-      />
-    </main>
+    <AppShell>
+      <main className="min-h-screen pt-16">
+        <AboutContent 
+          teamMembers={teamMembers} 
+          testimonials={dbTestimonials} 
+        />
+      </main>
+    </AppShell>
   )
 }
 

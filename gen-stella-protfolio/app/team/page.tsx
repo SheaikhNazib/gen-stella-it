@@ -18,12 +18,14 @@ export default async function TeamPage() {
     role: m.role,
     bio: m.bio || '',
     image: m.image,
+    imagePositionX: m.imagePositionX ?? 50,
+    imagePositionY: m.imagePositionY ?? 50,
+    imageScale: m.imageScale ?? 1,
     email: m.email || undefined,
-    social: {
-      twitter: m.twitter || undefined,
-      linkedin: m.linkedin || undefined,
-      github: m.github || undefined,
-    },
+    twitter: m.twitter || undefined,
+    linkedin: m.linkedin || undefined,
+    github: m.github || undefined,
+    expertise: m.expertise ?? [],
   }))
 
   return (
