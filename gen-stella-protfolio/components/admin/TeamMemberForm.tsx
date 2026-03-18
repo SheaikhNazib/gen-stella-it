@@ -22,7 +22,7 @@ import { Github, Linkedin, Twitter, MoveHorizontal, MoveVertical, ZoomIn } from 
 import { FormDescription } from "@/components/ui/form";
 import { Slider } from "@/components/ui/slider";
 
-export type TeamMemberFormValues = z.infer<typeof teamMemberFormSchema>;
+export type TeamMemberFormValues = z.input<typeof teamMemberFormSchema>;
 
 interface TeamMemberFormProps {
   initialData?: TeamMember;

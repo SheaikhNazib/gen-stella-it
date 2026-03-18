@@ -23,7 +23,11 @@ export default async function AdminTestimonialsPage() {
     );
   }
 
-  const testimonials = await db.testimonial.findMany({ orderBy: { createdAt: "desc" } });
+  const testimonials = (await db.testimonial.findMany({ orderBy: { createdAt: "desc" } })).map((testimonial) => ({
+    ...testimonial,
+    image: testimonial.image ?? undefined,
+    rating: testimonial.rating ?? undefined,
+  }));
 
   return (
     <div className="container mx-auto py-12 px-4 max-w-7xl mt-16">

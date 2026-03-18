@@ -39,7 +39,10 @@ export default function AdminTeamPage() {
       const method = editingMember ? "PUT" : "POST";
       const payload = {
         ...data,
-        expertise: data.expertise,
+        expertise: (data.expertise || "")
+          .split(",")
+          .map((item) => item.trim())
+          .filter(Boolean),
       };
       const body = editingMember ? { ...payload, id: editingMember.id } : payload;
 
