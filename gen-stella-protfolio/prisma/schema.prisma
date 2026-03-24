@@ -1,6 +1,7 @@
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 generator client {
@@ -38,9 +39,11 @@ model Session {
 model User {
   id            String    @id @default(cuid())
   name          String?
+  username      String?   @unique
   email         String?   @unique
   emailVerified DateTime?
   image         String?
+  password      String?
   role          UserRole  @default(USER)
   accounts      Account[]
   sessions      Session[]
@@ -64,8 +67,12 @@ model TeamMember {
   id        String   @id @default(cuid())
   name      String
   role      String
+  expertise String[]
   bio       String   @db.Text
   image     String
+  imagePositionX Int @default(50)
+  imagePositionY Int @default(50)
+  imageScale     Float @default(1)
   email     String?
   twitter   String?
   linkedin  String?

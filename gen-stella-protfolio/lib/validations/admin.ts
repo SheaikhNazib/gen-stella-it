@@ -1,14 +1,44 @@
 import * as z from "zod";
 
+const commaSeparatedList = z
+  .string()
+  .optional()
+  .or(z.literal(""))
+  .transform((value) =>
+    (value ?? "")
+      .split(",")
+      .map((item) => item.trim())
+      .filter(Boolean)
+  );
+
 export const teamMemberSchema = z.object({
   name: z.string().min(1, "Name is required"),
   role: z.string().min(1, "Role is required"),
+  expertise: z.array(z.string()).default([]),
   bio: z.string().min(1, "Bio is required"),
-  image: z.string().url("Valid image URL is required"),
+  image: z.string().min(1, "Image is required"),
+  imagePositionX: z.coerce.number().min(0).max(100).catch(50).default(50),
+  imagePositionY: z.coerce.number().min(0).max(100).catch(50).default(50),
+  imageScale: z.coerce.number().min(0.5).max(3).catch(1).default(1),
   email: z.string().email().optional().or(z.literal("")),
-  twitter: z.string().url().optional().or(z.literal("")),
-  linkedin: z.string().url().optional().or(z.literal("")),
-  github: z.string().url().optional().or(z.literal("")),
+  twitter: z.string().optional().or(z.literal("")),
+  linkedin: z.string().optional().or(z.literal("")),
+  github: z.string().optional().or(z.literal("")),
+});
+
+export const teamMemberFormSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  role: z.string().min(1, "Role is required"),
+  expertise: commaSeparatedList,
+  bio: z.string().min(1, "Bio is required"),
+  image: z.string().min(1, "Image is required"),
+  imagePositionX: z.coerce.number().min(0).max(100).catch(50).default(50),
+  imagePositionY: z.coerce.number().min(0).max(100).catch(50).default(50),
+  imageScale: z.coerce.number().min(0.5).max(3).catch(1).default(1),
+  email: z.string().email().optional().or(z.literal("")),
+  twitter: z.string().optional().or(z.literal("")),
+  linkedin: z.string().optional().or(z.literal("")),
+  github: z.string().optional().or(z.literal("")),
 });
 
 export const testimonialSchema = z.object({
@@ -16,7 +46,7 @@ export const testimonialSchema = z.object({
   author: z.string().min(1, "Author is required"),
   title: z.string().min(1, "Title is required"),
   company: z.string().min(1, "Company is required"),
-  image: z.string().url().optional().or(z.literal("")),
+  image: z.string().optional().or(z.literal("")),
   rating: z.number().min(1).max(5).default(5),
 });
 
@@ -25,10 +55,10 @@ export const portfolioProjectSchema = z.object({
   title: z.string().min(1, "Title is required"),
   description: z.string().min(1, "Description is required"),
   shortDescription: z.string().min(1, "Short description is required"),
-  image: z.string().url("Valid image URL is required"),
+  image: z.string().min(1, "Image is required"),
   category: z.string(), // Matching the prisma string type
   technologies: z.array(z.string()),
-  link: z.string().url().optional().or(z.literal("")),
+  link: z.string().optional().or(z.literal("")),
   caseStudy: z.string().optional().or(z.literal("")),
   results: z.array(z.string()),
   clientName: z.string().optional().or(z.literal("")),

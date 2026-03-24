@@ -1,13 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { TeamMemberForm } from "@/components/admin/TeamMemberForm";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, Plus, Pencil, Trash2, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { TeamMember } from "@/types/team";
+import { TeamMemberForm, type TeamMemberFormValues } from "@/components/admin/TeamMemberForm";
 
 export default function AdminTeamPage() {
   const router = useRouter();
@@ -34,10 +34,17 @@ export default function AdminTeamPage() {
     }
   };
 
-  const handleSubmit = async (data: any) => {
+  const handleSubmit = async (data: TeamMemberFormValues) => {
     try {
       const method = editingMember ? "PUT" : "POST";
-      const body = editingMember ? { ...data, id: editingMember.id } : data;
+      const payload = {
+        ...data,
+        expertise: (data.expertise || "")
+          .split(",")
+          .map((item) => item.trim())
+          .filter(Boolean),
+      };
+      const body = editingMember ? { ...payload, id: editingMember.id } : payload;
 
       const response = await fetch("/api/admin/team", {
         method,
@@ -48,7 +55,9 @@ export default function AdminTeamPage() {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to save team member");
+        const errorText = await response.text();
+        console.error("Save failed:", response.status, errorText);
+        throw new Error(`Failed to save team member: ${response.status} ${errorText}`);
       }
 
       toast.success(editingMember ? "Team member updated!" : "Team member created!");
@@ -119,16 +128,37 @@ export default function AdminTeamPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {members.map((member) => (
             <div key={member.id} className="bg-white rounded-xl border p-4 shadow-sm flex flex-col group relative overflow-hidden">
-               <div className="aspect-square rounded-lg overflow-hidden mb-4 bg-slate-100">
-                <img 
-                  src={member.image} 
-                  alt={member.name}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                />
+             <div className="aspect-square rounded-lg overflow-hidden mb-4 bg-slate-100">
+                <div className="w-full h-full transition-transform duration-500 group-hover:scale-105">
+                  <img 
+                    src={member.image} 
+                    alt={member.name}
+                    className="w-full h-full object-cover origin-center"
+                    style={{
+                      objectPosition: `${member.imagePositionX ?? 50}% ${member.imagePositionY ?? 50}%`,
+                      transform: `scale(${member.imageScale ?? 1})`
+                    }}
+                  />
+                </div>
              </div>
              <div className="flex-1">
                 <h3 className="text-lg font-bold text-slate-900">{member.name}</h3>
-                <p className="text-blue-600 font-medium text-sm mb-2">{member.role}</p>
+                <div className="mb-2 flex flex-wrap gap-2">
+                  {member.role.split(',').map((roleItem) => (
+                    <span key={`${member.id}-${roleItem}`} className="rounded-full bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-700">
+                      {roleItem.trim()}
+                    </span>
+                  ))}
+                </div>
+                {member.expertise && member.expertise.length > 0 && (
+                  <div className="mb-3 flex flex-wrap gap-2">
+                    {member.expertise.map((item) => (
+                      <span key={`${member.id}-expertise-${item}`} className="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700">
+                        {item}
+                      </span>
+                    ))}
+                  </div>
+                )}
                 <p className="text-slate-500 text-sm line-clamp-2">{member.bio}</p>
              </div>
              <div className="flex items-center gap-2 mt-4 pt-4 border-t border-slate-50 opacity-0 group-hover:opacity-100 transition-opacity">

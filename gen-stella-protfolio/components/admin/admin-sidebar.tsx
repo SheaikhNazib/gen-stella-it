@@ -1,16 +1,17 @@
 "use client"
 
 import * as React from "react"
-import { 
-  LayoutDashboard, 
-  Users, 
-  FolderKanban, 
-  Settings, 
-  MessageSquare, 
+import {
+  LayoutDashboard,
+  Users,
+  FolderKanban,
+  Settings,
+  MessageSquare,
   FileText,
   PanelLeftClose,
   ChevronRight,
-  LogOut
+  LogOut,
+  UserCog
 } from "lucide-react"
 import {
   Sidebar,
@@ -35,6 +36,7 @@ const items = [
   { title: "Services", url: "/admin/services", icon: LayoutDashboard },
   { title: "Testimonials", url: "/admin/testimonials", icon: MessageSquare },
   { title: "Blog", url: "/admin/blog", icon: FileText },
+  { title: "Users", url: "/admin/users", icon: UserCog },
   { title: "Settings", url: "/admin/settings", icon: Settings },
 ]
 

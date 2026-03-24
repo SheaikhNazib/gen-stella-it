@@ -2,7 +2,6 @@ import { getBlogPost, getAllBlogSlugs } from '@/lib/blog'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { MDXRemote } from 'next-mdx-remote/rsc'
 import AppShell from '@/components/layout/AppShell'
 import { Calendar, Clock, ArrowLeft, Tag } from 'lucide-react'
 
@@ -11,12 +10,13 @@ interface BlogPostPageProps {
 }
 
 export async function generateStaticParams() {
-  return getAllBlogSlugs().map((slug) => ({ slug }))
+  const slugs = await getAllBlogSlugs();
+  return slugs.map((slug) => ({ slug }))
 }
 
 export async function generateMetadata({ params }: BlogPostPageProps): Promise<Metadata> {
   const { slug } = await params
-  const post = getBlogPost(slug)
+  const post = await getBlogPost(slug)
   if (!post) return {}
 
   return {
@@ -36,7 +36,7 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const { slug } = await params
-  const post = getBlogPost(slug)
+  const post = await getBlogPost(slug)
   if (!post) notFound()
 
   const { frontmatter, readingTime, content } = post
@@ -119,9 +119,10 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
         </div>
 
         {/* MDX Content */}
-        <div className="prose prose-neutral dark:prose-invert max-w-none prose-headings:font-bold prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-code:bg-muted prose-code:rounded prose-code:px-1 prose-pre:bg-muted">
-          <MDXRemote source={content} />
-        </div>
+        <div 
+          className="prose prose-neutral dark:prose-invert max-w-none prose-headings:font-bold prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-code:bg-muted prose-code:rounded prose-code:px-1 prose-pre:bg-muted"
+          dangerouslySetInnerHTML={{ __html: content }}
+        />
 
         {/* CTA at the end of every post */}
         <div className="mt-16 rounded-2xl bg-gradient-to-r from-blue-600 to-purple-500 p-px">

@@ -4,8 +4,8 @@ import { siteConfig } from '@/config/site.config'
 
 const BASE = siteConfig.url
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const posts = getAllBlogPosts()
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const posts = await getAllBlogPosts()
 
   const staticRoutes: MetadataRoute.Sitemap = [
     { url: BASE,                               lastModified: new Date(), changeFrequency: 'weekly',  priority: 1.0 },
