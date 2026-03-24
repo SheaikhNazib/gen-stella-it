@@ -8,9 +8,19 @@ interface CaseStudyPageProps {
   params: Promise<{ slug: string }>;
 }
 
+function isMissingDatabaseUrlError(error: unknown): boolean {
+  return error instanceof Error && error.message.includes('Environment variable not found: DATABASE_URL')
+}
+
 export async function generateMetadata({ params }: CaseStudyPageProps): Promise<Metadata> {
   const { slug } = await params
-  const project = await db.portfolioProject.findUnique({ where: { slug } })
+  const project = await db.portfolioProject.findUnique({ where: { slug } }).catch((error) => {
+    if (isMissingDatabaseUrlError(error)) {
+      return null
+    }
+
+    throw error
+  })
   if (!project) return { title: 'Project Not Found' }
   return {
     title: `${project.title} — Gen Stella IT`,
@@ -23,6 +33,12 @@ export default async function CaseStudyPage({ params }: CaseStudyPageProps) {
 
   const project = await db.portfolioProject.findUnique({
     where: { slug },
+  }).catch((error) => {
+    if (isMissingDatabaseUrlError(error)) {
+      return null
+    }
+
+    throw error
   })
 
   if (!project) {
