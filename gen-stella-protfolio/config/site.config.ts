@@ -80,7 +80,7 @@ export const siteConfig = {
       'full stack developer dhaka',
       'IT company bangladesh',
       'genstellait',
-    ],
+    ] as string[],
   },
 } as const
 

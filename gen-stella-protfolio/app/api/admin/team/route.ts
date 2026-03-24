@@ -38,8 +38,12 @@ export async function POST(req: Request) {
       data: {
         name: body.name,
         role: body.role,
+        expertise: body.expertise,
         bio: body.bio,
         image: body.image,
+        imagePositionX: Number.isFinite(body.imagePositionX) ? Math.round(body.imagePositionX) : 50,
+        imagePositionY: Number.isFinite(body.imagePositionY) ? Math.round(body.imagePositionY) : 50,
+        imageScale: Number.isFinite(body.imageScale) ? body.imageScale : 1,
         email: body.email,
         twitter: body.twitter,
         linkedin: body.linkedin,
@@ -50,10 +54,19 @@ export async function POST(req: Request) {
     return NextResponse.json(member);
   } catch (error) {
     if (error instanceof z.ZodError) {
+      console.error("[TEAM_POST_ZOD]", error.issues);
       return new NextResponse(JSON.stringify(error.issues), { status: 422 });
     }
 
-    return new NextResponse("Internal Error", { status: 500 });
+    console.error("[TEAM_POST]", error);
+    return new NextResponse(
+      JSON.stringify({
+        error: "Internal Error",
+        message: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+      }),
+      { status: 500 }
+    );
   }
 }
 
@@ -65,7 +78,13 @@ export async function PUT(req: Request) {
     }
 
     const json = await req.json();
+    console.log("[TEAM_PUT_RAW_DATA]", json);
     const { id, ...data } = json;
+    
+    if (!id) {
+      return new NextResponse("Missing ID", { status: 400 });
+    }
+
     const body = teamMemberSchema.parse(data);
 
     const member = await db.teamMember.update({
@@ -73,8 +92,12 @@ export async function PUT(req: Request) {
       data: {
         name: body.name,
         role: body.role,
+        expertise: body.expertise,
         bio: body.bio,
         image: body.image,
+        imagePositionX: Number.isFinite(body.imagePositionX) ? Math.round(body.imagePositionX) : 50,
+        imagePositionY: Number.isFinite(body.imagePositionY) ? Math.round(body.imagePositionY) : 50,
+        imageScale: Number.isFinite(body.imageScale) ? body.imageScale : 1,
         email: body.email,
         twitter: body.twitter,
         linkedin: body.linkedin,
@@ -85,9 +108,18 @@ export async function PUT(req: Request) {
     return NextResponse.json(member);
   } catch (error) {
     if (error instanceof z.ZodError) {
+      console.error("[TEAM_PUT_ZOD]", error.issues);
       return new NextResponse(JSON.stringify(error.issues), { status: 422 });
     }
-    return new NextResponse("Internal Error", { status: 500 });
+    console.error("[TEAM_PUT]", error);
+    return new NextResponse(
+      JSON.stringify({
+        error: "Internal Error",
+        message: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+      }),
+      { status: 500 }
+    );
   }
 }
 

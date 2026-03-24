@@ -1,9 +1,4 @@
-import fs from 'fs'
-import path from 'path'
-import matter from 'gray-matter'
-import readingTime from 'reading-time'
-
-const BLOG_DIR = path.join(process.cwd(), 'content', 'blog')
+import { db } from "@/lib/db"
 
 export interface BlogFrontmatter {
   title: string
@@ -13,6 +8,7 @@ export interface BlogFrontmatter {
   author?: string
   coverImage?: string
   published?: boolean
+  category?: string
 }
 
 export interface BlogPost {
@@ -22,50 +18,57 @@ export interface BlogPost {
   content: string
 }
 
-function ensureBlogDir() {
-  if (!fs.existsSync(BLOG_DIR)) {
-    fs.mkdirSync(BLOG_DIR, { recursive: true })
-  }
+export async function getAllBlogSlugs(): Promise<string[]> {
+  const posts = await db.blogPost.findMany({
+    select: { slug: true },
+    where: { published: true }
+  })
+  return posts.map((p) => p.slug)
 }
 
-export function getAllBlogSlugs(): string[] {
-  ensureBlogDir()
-  return fs
-    .readdirSync(BLOG_DIR)
-    .filter((f) => f.endsWith('.mdx') || f.endsWith('.md'))
-    .map((f) => f.replace(/\.mdx?$/, ''))
-}
-
-export function getBlogPost(slug: string): BlogPost | null {
-  ensureBlogDir()
-  const mdxPath = path.join(BLOG_DIR, `${slug}.mdx`)
-  const mdPath = path.join(BLOG_DIR, `${slug}.md`)
-  const filePath = fs.existsSync(mdxPath) ? mdxPath : fs.existsSync(mdPath) ? mdPath : null
-  if (!filePath) return null
-
-  const raw = fs.readFileSync(filePath, 'utf-8')
-  const { data, content } = matter(raw)
-  const rt = readingTime(content)
+export async function getBlogPost(slug: string): Promise<BlogPost | null> {
+  const post = await db.blogPost.findUnique({
+    where: { slug }
+  })
+  if (!post) return null
 
   return {
-    slug,
+    slug: post.slug,
     frontmatter: {
-      title: data.title ?? slug,
-      description: data.description ?? '',
-      date: data.date ? String(data.date) : '',
-      tags: Array.isArray(data.tags) ? data.tags : [],
-      author: data.author,
-      coverImage: data.coverImage,
-      published: data.published !== false,
+      title: post.title,
+      description: post.description,
+      date: post.date,
+      tags: post.tags,
+      author: post.author,
+      coverImage: post.featuredImage || undefined,
+      published: post.published,
+      category: post.category,
     },
-    readingTime: rt.text,
-    content,
+    readingTime: post.readingTime || "5 min read",
+    content: post.content || "",
   }
 }
 
-export function getAllBlogPosts(): BlogPost[] {
-  return getAllBlogSlugs()
-    .map((slug) => getBlogPost(slug))
-    .filter((p): p is BlogPost => p !== null && p.frontmatter.published !== false)
-    .sort((a, b) => new Date(b.frontmatter.date).getTime() - new Date(a.frontmatter.date).getTime())
+export async function getAllBlogPosts(): Promise<BlogPost[]> {
+  const posts = await db.blogPost.findMany({
+    where: { published: true },
+    orderBy: { date: 'desc' }
+  });
+
+  return posts.map(post => ({
+    slug: post.slug,
+    frontmatter: {
+      title: post.title,
+      description: post.description,
+      date: post.date,
+      tags: post.tags,
+      author: post.author,
+      coverImage: post.featuredImage || undefined,
+      published: post.published,
+      category: post.category,
+    },
+    readingTime: post.readingTime || "5 min read",
+    content: post.content || "",
+  }));
 }
+

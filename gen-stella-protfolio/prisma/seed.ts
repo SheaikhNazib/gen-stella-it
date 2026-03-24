@@ -1,6 +1,5 @@
 import { PrismaClient } from '@prisma/client'
 import { teamMembers } from '../data/team'
-import { testimonials } from '../data/testimonials'
 import { portfolioProjects } from '../data/portfolio'
 import { services } from '../data/services'
 
@@ -14,38 +13,28 @@ async function main() {
   for (const member of teamMembers) {
     await prisma.teamMember.upsert({
       where: { id: member.id },
-      update: {},
+      update: {
+        expertise: member.expertise ?? [],
+      },
       create: {
         id: member.id,
         name: member.name,
         role: member.role,
+        expertise: member.expertise ?? [],
         bio: member.bio,
         image: member.image,
+        imagePositionX: member.imagePositionX ?? 50,
+        imagePositionY: member.imagePositionY ?? 50,
+        imageScale: member.imageScale ?? 1,
         email: member.email,
-        twitter: member.social?.twitter,
-        linkedin: member.social?.linkedin,
-        github: member.social?.github,
+        twitter: member.twitter,
+        linkedin: member.linkedin,
+        github: member.github,
       },
     })
   }
 
-  // Seed Testimonials
-  console.log('Seeding testimonials...')
-  for (const testimonial of testimonials) {
-    await prisma.testimonial.upsert({
-      where: { id: testimonial.id },
-      update: {},
-      create: {
-        id: testimonial.id,
-        quote: testimonial.quote,
-        author: testimonial.author,
-        title: testimonial.title,
-        company: testimonial.company,
-        image: testimonial.image,
-        rating: testimonial.rating || 5,
-      },
-    })
-  }
+  // Note: Testimonials are expected to be added via admin UI or external process.
 
   // Seed Portfolio Projects
   console.log('Seeding portfolio projects...')

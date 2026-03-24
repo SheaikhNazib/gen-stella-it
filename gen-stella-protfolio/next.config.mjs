@@ -6,12 +6,15 @@ const __dirname = path.dirname(__filename)
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  typescript: {
-    // TODO: Remove once all type errors are fixed
-    ignoreBuildErrors: true,
-  },
   images: {
     formats: ['image/avif', 'image/webp'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+        pathname: '/dxfpdj8eb/**',
+      },
+    ],
   },
   turbopack: {
     root: __dirname,

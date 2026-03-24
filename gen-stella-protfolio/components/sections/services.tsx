@@ -17,9 +17,22 @@ import {
 } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { services } from '@/data/services'
+import { services as staticServices, type Service as StaticService } from '@/data/services'
 
-export function ServicesSection() {
+interface ServiceItem {
+  id: string
+  title: string
+  description: string
+  features: string[]
+  technologies?: string[]
+  icon?: string | null
+  caseStudySlug?: string | null
+  ctaText?: string | null
+  ctaHref?: string | null
+}
+
+export function ServicesSection({ services: propServices }: { services?: ServiceItem[] } = {}) {
+  const services = propServices && propServices.length > 0 ? propServices : staticServices
   const techLogoMap: Record<string, string> = {
     'React': 'react.svg',
     'Next.js': 'nextjs.svg',

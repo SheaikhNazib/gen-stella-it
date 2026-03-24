@@ -36,12 +36,12 @@ export async function POST(req: Request) {
 
     const testimonial = await db.testimonial.create({
       data: {
-        name: body.name,
-        role: body.role,
+        author: body.author,
+        title: body.title,
         company: body.company,
         image: body.image,
-        content: body.content,
-        stars: body.stars || 5,
+        quote: body.quote,
+        rating: body.rating ?? 5,
       },
     });
 
@@ -74,12 +74,12 @@ export async function PUT(req: Request) {
     const testimonial = await db.testimonial.update({
       where: { id },
       data: {
-        name: body.name,
-        role: body.role,
+        author: body.author,
+        title: body.title,
         company: body.company,
         image: body.image,
-        content: body.content,
-        stars: body.stars || 5,
+        quote: body.quote,
+        rating: body.rating ?? 5,
       },
     });
 
