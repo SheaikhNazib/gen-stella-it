@@ -27,10 +27,10 @@ export async function proxy(request: NextRequest) {
         new URL(`/login?from=${encodeURIComponent(from)}`, request.url)
       );
     }
-    
+
     // Optional: Restricted admin only
     if (!isAdmin) {
-       return NextResponse.redirect(new URL("/", request.url));
+      return NextResponse.redirect(new URL("/", request.url));
     }
   }
 
